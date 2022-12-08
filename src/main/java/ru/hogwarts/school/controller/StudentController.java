@@ -61,6 +61,6 @@ public class StudentController {
     @GetMapping("/filter{age}")
     @Operation(summary = "Дамболдор!!! Зачем вам это заклинание?")
     public ResponseEntity<Collection<Student>> filterStudentAge(@PathVariable int age) {
-        return ResponseEntity.ok(studentService.findByAgeLike(age));
+        return ResponseEntity.ok(studentService.findByAge(age));
     }
 }

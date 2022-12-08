@@ -30,8 +30,8 @@ public class StudentService {
         studentRepositories.deleteById(id);
     }
 
-    public Collection<Student> findByAgeLike(int age) {
-        return studentRepositories.findByAgeLike(age);
+    public Collection<Student> findByAge(int age) {
+        return studentRepositories.findByAge(age);
     }
 
     public Collection<Student> getAllStudents() {
