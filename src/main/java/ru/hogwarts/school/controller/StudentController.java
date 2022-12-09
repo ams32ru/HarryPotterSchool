@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
@@ -29,11 +30,29 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    //Сюда можно было бы впихнуть и метод поиска студента по возрасту, но у меня там шутка
+    // про Дамболдора, поэтому оставил.
     @GetMapping
     @Operation(summary = "Посмотреть кто собрался в большом зале Хогвартса")
-    public ResponseEntity<Collection<Student>> getAllStudents() {
+    public ResponseEntity<Collection<Student>> getAllStudentsOrFiktreAge(@RequestParam(required = false) Integer minAge,
+                                                                         @RequestParam(required = false)Integer maxAge) {
+        if (minAge != null && maxAge != null) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(minAge, maxAge));
+        }
         return ResponseEntity.ok(studentService.getAllStudents());
     }
+
+    @GetMapping("/filter{age}")
+    @Operation(summary = "Дамболдор!!! Зачем вам это заклинание?")
+    public ResponseEntity<Collection<Student>> filterStudentAge(@RequestParam int age) {
+        return ResponseEntity.ok(studentService.findByAge(age));
+    }
+
+//    @GetMapping
+//    @Operation(summary = "Узнать факультет студента")
+//    public Faculty findFacultyStudents(@RequestParam Student student) {
+//     return   studentService.findFacultyStudents(student);
+//    }
 
     @PostMapping
     @Operation(summary = "Зачислить студента в Хогвартс")
@@ -58,9 +77,5 @@ public class StudentController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/filter{age}")
-    @Operation(summary = "Дамболдор!!! Зачем вам это заклинание?")
-    public ResponseEntity<Collection<Student>> filterStudentAge(@PathVariable int age) {
-        return ResponseEntity.ok(studentService.findByAge(age));
-    }
+
 }

@@ -30,7 +30,7 @@ public class FacultyController {
     }
 
     @GetMapping
-    @Operation (summary = "Проверить что факультета по прежнему 4")
+    @Operation(summary = "Проверить что факультета по прежнему 4")
     public ResponseEntity<Collection<Faculty>> getAllFaculty() {
         return ResponseEntity.ok(facultyService.getAllFaculty());
     }
@@ -58,9 +58,12 @@ public class FacultyController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/filter{color}")
-    @Operation(summary = "Серьезно? не запомнишь 4 цвета?")
-    public ResponseEntity<Collection<Faculty>> getColorFaculty(String color) {
-        return ResponseEntity.ok(facultyService.findFacultyIbColor(color));
+
+    @GetMapping("/filter")
+    @Operation(summary = "Искать по цвету или названию, но никого не интересует что у факультета два цвета....")
+    public ResponseEntity<Collection<Faculty>> FindFaculty(@RequestParam(required = false) String name,
+                                                           @RequestParam(required = false) String color) {
+        return ResponseEntity.ok(facultyService.findFacultyByNameIgnoreCaseOrColorIgnoreCase(name, color));
     }
+
 }
