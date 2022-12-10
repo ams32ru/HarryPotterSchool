@@ -73,4 +73,12 @@ public class Faculty {
     public void setId(long id) {
         this.id = id;
     }
+
+    public Collection<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(Collection<Student> students) {
+        this.students = students;
+    }
 }

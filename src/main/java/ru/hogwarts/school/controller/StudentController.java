@@ -35,7 +35,7 @@ public class StudentController {
     @GetMapping
     @Operation(summary = "Посмотреть кто собрался в большом зале Хогвартса")
     public ResponseEntity<Collection<Student>> getAllStudentsOrFiktreAge(@RequestParam(required = false) Integer minAge,
-                                                                         @RequestParam(required = false)Integer maxAge) {
+                                                                         @RequestParam(required = false) Integer maxAge) {
         if (minAge != null && maxAge != null) {
             return ResponseEntity.ok(studentService.findByAgeBetween(minAge, maxAge));
         }
@@ -44,15 +44,15 @@ public class StudentController {
 
     @GetMapping("/filter{age}")
     @Operation(summary = "Дамболдор!!! Зачем вам это заклинание?")
-    public ResponseEntity<Collection<Student>> filterStudentAge(@RequestParam int age) {
+    public ResponseEntity<Collection<Student>> filterStudentAge(@PathVariable int age) {
         return ResponseEntity.ok(studentService.findByAge(age));
     }
 
-//    @GetMapping
-//    @Operation(summary = "Узнать факультет студента")
-//    public Faculty findFacultyStudents(@RequestParam Student student) {
-//     return   studentService.findFacultyStudents(student);
-//    }
+    @GetMapping("/filter{id}")
+    @Operation(summary = "Узнать факультет студента")
+    public Faculty findFacultyStudents(@PathVariable Long id) {
+        return studentService.findStudent(id).getFaculty();
+    }
 
     @PostMapping
     @Operation(summary = "Зачислить студента в Хогвартс")
@@ -76,6 +76,4 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
-
-
 }
