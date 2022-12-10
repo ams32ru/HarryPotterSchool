@@ -1,5 +1,6 @@
 package ru.hogwarts.school.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.persistence.*;
@@ -12,8 +13,9 @@ public class Student {
     private long id;
     private String name;
     private int age;
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "faculty_id")
+    @JsonBackReference
     private Faculty faculty;
 
 
@@ -76,7 +78,4 @@ public class Student {
         return faculty;
     }
 
-    public void setFaculty(Faculty faculty) {
-        this.faculty = faculty;
-    }
 }

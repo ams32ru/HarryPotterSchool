@@ -15,9 +15,8 @@ public class FacultyService {
         this.facultyRepositories = facultyRepositories;
     }
 
-
     public Faculty createFaculty(Faculty faculty) {
-        return (Faculty) facultyRepositories.save(faculty);
+        return facultyRepositories.save(faculty);
     }
 
     public Faculty findFaculty(long id) {

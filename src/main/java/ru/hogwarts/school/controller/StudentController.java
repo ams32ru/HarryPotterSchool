@@ -15,9 +15,18 @@ import java.util.Collection;
 public class StudentController {
 
     private final StudentService studentService;
-
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
+    }
+
+    @GetMapping
+    @Operation(summary = "Посмотреть кто собрался в большом зале Хогвартса")
+    public ResponseEntity<Collection<Student>> getAllStudentsOrFiktreAge(@RequestParam(required = false) Integer minAge,
+                                                                         @RequestParam(required = false) Integer maxAge) {
+        if (minAge != null && maxAge != null) {
+            return ResponseEntity.ok(studentService.findByAgeBetween(minAge, maxAge));
+        }
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
     @GetMapping("{id}")
@@ -30,28 +39,16 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
-    //Сюда можно было бы впихнуть и метод поиска студента по возрасту, но у меня там шутка
-    // про Дамболдора, поэтому оставил.
-    @GetMapping
-    @Operation(summary = "Посмотреть кто собрался в большом зале Хогвартса")
-    public ResponseEntity<Collection<Student>> getAllStudentsOrFiktreAge(@RequestParam(required = false) Integer minAge,
-                                                                         @RequestParam(required = false) Integer maxAge) {
-        if (minAge != null && maxAge != null) {
-            return ResponseEntity.ok(studentService.findByAgeBetween(minAge, maxAge));
-        }
-        return ResponseEntity.ok(studentService.getAllStudents());
+    @GetMapping("/filterId{id}")
+    @Operation(summary = "Спросить у распределяющей шляпы на каком факультете учится этот студент")
+    public Faculty findFacultyStudents(@PathVariable Long id) {
+        return studentService.findStudent(id).getFaculty();
     }
 
-    @GetMapping("/filter{age}")
+    @GetMapping("/filterAge{age}")
     @Operation(summary = "Дамболдор!!! Зачем вам это заклинание?")
     public ResponseEntity<Collection<Student>> filterStudentAge(@PathVariable int age) {
         return ResponseEntity.ok(studentService.findByAge(age));
-    }
-
-    @GetMapping("/filter{id}")
-    @Operation(summary = "Узнать факультет студента")
-    public Faculty findFacultyStudents(@PathVariable Long id) {
-        return studentService.findStudent(id).getFaculty();
     }
 
     @PostMapping

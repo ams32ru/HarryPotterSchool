@@ -43,6 +43,4 @@ public class StudentService {
     public Collection<Student> getAllStudents() {
         return studentRepositories.findAll();
     }
-
-
 }

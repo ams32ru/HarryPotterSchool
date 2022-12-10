@@ -9,15 +9,20 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.FacultyService;
 
 import java.util.Collection;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("/faculty")
 public class FacultyController {
     private final FacultyService facultyService;
-
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
+    }
+
+    @GetMapping
+    @Operation(summary = "Проверить что факультета по прежнему 4")
+    public ResponseEntity<Collection<Faculty>> getAllFaculty() {
+        return ResponseEntity.ok(facultyService.getAllFaculty());
     }
 
     @GetMapping("{id}")
@@ -30,23 +35,17 @@ public class FacultyController {
         return ResponseEntity.ok(faculty);
     }
 
-    @GetMapping("/FacultyStudent{id}")
-    @Operation(summary = "Узнать студентов факультета")
-    public Collection<Student> findStudentsFaculty(@PathVariable Long id) {
-       return   facultyService.findFaculty(id).getStudents();
-    }
-
-    @GetMapping
-    @Operation(summary = "Проверить что факультета по прежнему 4")
-    public ResponseEntity<Collection<Faculty>> getAllFaculty() {
-        return ResponseEntity.ok(facultyService.getAllFaculty());
-    }
-
     @GetMapping("/filter")
     @Operation(summary = "Искать по цвету или названию, но никого не интересует что у факультета два цвета....")
     public ResponseEntity<Collection<Faculty>> FindFaculty(@RequestParam(required = false) String name,
                                                            @RequestParam(required = false) String color) {
         return ResponseEntity.ok(facultyService.findFacultyByNameIgnoreCaseOrColorIgnoreCase(name, color));
+    }
+
+    @GetMapping("/filter{id}")
+    @Operation(summary = "Получить у деканата список студентов факультета")
+    public Collection<Student> findStudentsFaculty(@PathVariable Long id) {
+       return   facultyService.findFaculty(id).getStudents();
     }
 
     @PostMapping
@@ -71,8 +70,4 @@ public class FacultyController {
         facultyService.deleteFaculty(id);
         return ResponseEntity.ok().build();
     }
-
-
-
-
 }
