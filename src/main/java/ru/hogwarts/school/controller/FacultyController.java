@@ -21,8 +21,10 @@ public class FacultyController {
 
     @GetMapping
     @Operation(summary = "Проверить что факультета по прежнему 4")
-    public ResponseEntity<Collection<Faculty>> getAllFaculty() {
-        return ResponseEntity.ok(facultyService.getAllFaculty());
+    public ResponseEntity<Collection<Faculty>> getAllFaculty(@RequestParam("page") Integer pageNumber,
+                                                             @RequestParam("size") Integer pageSize) {
+
+        return ResponseEntity.ok(facultyService.getAllFaculty(pageNumber,pageSize));
     }
 
     @GetMapping("{id}")

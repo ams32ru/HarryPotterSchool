@@ -1,5 +1,6 @@
 package ru.hogwarts.school.service;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.repositories.FacultyRepositories;
@@ -31,8 +32,9 @@ public class FacultyService {
         facultyRepositories.deleteById(id);
     }
 
-    public Collection<Faculty> getAllFaculty() {
-        return facultyRepositories.findAll();
+    public Collection<Faculty> getAllFaculty(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
+        return facultyRepositories.findAll(pageRequest).getContent();
     }
 
     public Collection<Faculty> findFacultyByNameIgnoreCaseOrColorIgnoreCase(String name, String color) {

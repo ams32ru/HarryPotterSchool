@@ -15,6 +15,7 @@ import java.util.Collection;
 public class StudentController {
 
     private final StudentService studentService;
+
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
@@ -73,4 +74,22 @@ public class StudentController {
         studentService.deleteStudent(id);
         return ResponseEntity.ok().build();
     }
+
+
+    @Operation(summary = "Сколько студентов в Хогвартсе",tags = "Запросы SQL")
+    @GetMapping("countStudents")
+    public int getStudentCount() {
+        return studentService.getStudentCount();
+    }
+    @Operation(summary = "Средний возраст студентов",tags = "Запросы SQL")
+    @GetMapping("avgAgeStudents")
+    public int getStudentByAgeAvg() {
+        return studentService.getStudentByAgeAvg();
+    }
+    @Operation(summary = "Посмотреть последние 5 студентов в списках", tags = "Запросы SQL")
+    @GetMapping("last5Students")
+    public Collection<Student> get5lastStudent() {
+        return studentService.get5lastStudent();
+    }
+
 }

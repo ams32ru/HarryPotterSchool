@@ -3,13 +3,11 @@ package ru.hogwarts.school;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -48,12 +46,15 @@ public class FacultyControllerTest {
     @InjectMocks
     private FacultyController facultyController;
 
+    ObjectMapper objectMapper = new ObjectMapper();
+
     @Test
     public void getFacultyTest() throws Exception {
 
         final String name = "WWWvvvWWW";
         final String color = "green";
         final long id = 1L;
+
 
         Faculty faculty = new Faculty(name, color, id);
 
@@ -65,7 +66,7 @@ public class FacultyControllerTest {
         when(facultyRepository.save(any(Faculty.class))).thenReturn(faculty);
         when(facultyRepository.findById(eq(id))).thenReturn(Optional.of(faculty));
         when(facultyRepository.findFacultyByNameIgnoreCaseOrColorIgnoreCase(eq(name), eq(color)))
-                .thenReturn(Collections.singleton(faculty));
+                .thenReturn(Set.of(faculty));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/faculty")
@@ -97,21 +98,38 @@ public class FacultyControllerTest {
                 .andExpect(jsonPath("$.name").value(name))
                 .andExpect(jsonPath("$.color").value(color));
 
-//        mockMvc.perform(MockMvcRequestBuilders
-//                        .get("faculty/filter?name="+name)
-//                        .content(facultyObject.toString())
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(id))
-//                .andExpect(jsonPath("$.name").value(name))
-//                .andExpect(jsonPath("$.color").value(color));
-
 
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/faculty/" + id)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
+    }
+
+    @Test
+    void findByColorAndNameIgnoreCaseTest()throws Exception {
+        long id1 = 1l;
+        String name1 = "Грифиндор";
+        String color1 = "Красный";
+
+        long id2 = 2l;
+        String name2 = "Слизерин";
+        String color2 = "Зеленый";
+
+        Faculty faculty1 = new Faculty(name1, color1, id1);
+        Faculty faculty2 = new Faculty(name2, color2, id2);
+
+        when(facultyRepository.findFacultyByNameIgnoreCaseOrColorIgnoreCase(name1, color2))
+                .thenReturn(Set.of(faculty1, faculty2));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/faculty/filter")
+                        .queryParam("name", name1)
+                        .queryParam("color", color2)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(List.of(faculty1, faculty2))));
     }
 }
