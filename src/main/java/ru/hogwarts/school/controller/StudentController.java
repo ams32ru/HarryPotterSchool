@@ -40,6 +40,19 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    @GetMapping("/filterNameSorted")
+    @Operation(summary = "Получить отсортированный по алфавиту список студентов", tags = "streamAPI")
+    public Collection<String> getSortedNameStudent() {
+        return studentService.getSortedNameStudent();
+    }
+
+    @GetMapping("/filterAverageAge")
+    @Operation(summary = "Получить средний возраст студентов", tags = "streamAPI")
+    public Double getAverageAge() {
+        return studentService.getAveregeAge();
+    }
+
+
     @GetMapping("/filterId{id}")
     @Operation(summary = "Спросить у распределяющей шляпы на каком факультете учится этот студент")
     public Faculty findFacultyStudents(@PathVariable Long id) {
@@ -76,16 +89,18 @@ public class StudentController {
     }
 
 
-    @Operation(summary = "Сколько студентов в Хогвартсе",tags = "Запросы SQL")
+    @Operation(summary = "Сколько студентов в Хогвартсе", tags = "Запросы SQL")
     @GetMapping("countStudents")
     public int getStudentCount() {
         return studentService.getStudentCount();
     }
-    @Operation(summary = "Средний возраст студентов",tags = "Запросы SQL")
+
+    @Operation(summary = "Средний возраст студентов", tags = "Запросы SQL")
     @GetMapping("avgAgeStudents")
     public int getStudentByAgeAvg() {
         return studentService.getStudentByAgeAvg();
     }
+
     @Operation(summary = "Посмотреть последние 5 студентов в списках", tags = "Запросы SQL")
     @GetMapping("last5Students")
     public Collection<Student> get5lastStudent() {

@@ -15,6 +15,7 @@ import java.util.Collection;
 @RequestMapping("/faculty")
 public class FacultyController {
     private final FacultyService facultyService;
+
     public FacultyController(FacultyService facultyService) {
         this.facultyService = facultyService;
     }
@@ -24,7 +25,7 @@ public class FacultyController {
     public ResponseEntity<Collection<Faculty>> getAllFaculty(@RequestParam("page") Integer pageNumber,
                                                              @RequestParam("size") Integer pageSize) {
 
-        return ResponseEntity.ok(facultyService.getAllFaculty(pageNumber,pageSize));
+        return ResponseEntity.ok(facultyService.getAllFaculty(pageNumber, pageSize));
     }
 
     @GetMapping("{id}")
@@ -44,10 +45,18 @@ public class FacultyController {
         return ResponseEntity.ok(facultyService.findFacultyByNameIgnoreCaseOrColorIgnoreCase(name, color));
     }
 
+    @GetMapping("/filterLongName")
+    @Operation(summary = "Приз за самое длинное название получает", tags = "streamAPI")
+
+    public String getLongName() {
+      return   facultyService.getLongName();
+    }
+
+
     @GetMapping("/filter{id}")
     @Operation(summary = "Получить у деканата список студентов факультета")
     public Collection<Student> findStudentsFaculty(@PathVariable Long id) {
-       return   facultyService.findFaculty(id).getStudents();
+        return facultyService.findFaculty(id).getStudents();
     }
 
     @PostMapping

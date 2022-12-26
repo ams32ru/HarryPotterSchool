@@ -7,6 +7,7 @@ import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.repositories.StudentRepositories;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -65,5 +66,18 @@ public class StudentService {
     public Collection<Student> get5lastStudent() {
         logger.info("the following method was called: get5lastStudent");
         return studentRepositories.get5lastStudent();
+    }
+
+    public List<String> getSortedNameStudent() {
+        return studentRepositories.findAll().stream().
+                map(s -> s.getName().toUpperCase()).
+                sorted().collect(Collectors.toList());
+    }
+
+    public double getAveregeAge() {
+        return studentRepositories.findAll().stream().
+                mapToDouble(Student::getAge).
+                average().
+                getAsDouble();
     }
 }
