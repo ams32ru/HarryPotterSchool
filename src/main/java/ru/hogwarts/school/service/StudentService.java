@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class StudentService {
     private final StudentRepositories studentRepositories;
+
     Logger logger = LoggerFactory.getLogger(StudentService.class);
 
     public StudentService(StudentRepositories studentRepositories) {
@@ -80,4 +81,40 @@ public class StudentService {
                 average().
                 getAsDouble();
     }
+
+
+    public void getStudentFoThread() {
+        List<Student> students = studentRepositories.findAll();
+        new Thread(() -> {
+            System.out.println(students.get(0));
+            System.out.println(students.get(1));
+        }).start();
+        new Thread(() -> {
+            System.out.println(students.get(2));
+            System.out.println(students.get(3));
+        }).start();
+        new Thread(() -> {
+            System.out.println(students.get(4));
+            System.out.println(students.get(5));
+        }).start();
+    }
+
+    public synchronized void printStudentSynhronized(List<Student> students) {
+        for (Student student : students) {
+            System.out.println(student);
+        }
+    }
+
+    public void getStudentFoThreadSynhronized() {
+        List<Student> students = studentRepositories.findAll();
+        new Thread(() -> {
+            printStudentSynhronized(students.subList(0,2));
+            printStudentSynhronized(students.subList(2,4));
+            printStudentSynhronized(students.subList(4,6));
+
+        }).start();
+    }
+
+
+
 }

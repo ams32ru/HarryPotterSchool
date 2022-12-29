@@ -40,6 +40,20 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    @GetMapping("/ThreadStudent")
+    @Operation(summary = "Список студентов в разных потоках", tags = "Потоки")
+    public void getStudentFoThread() {
+        studentService.getStudentFoThread();
+
+    }
+
+    @GetMapping("/ThreadStudentSyn")
+    @Operation(summary = "Список студентов в разных потоках синхронно", tags = "Потоки")
+    public void getStudentfoThreadSynhron() {
+        studentService.getStudentFoThreadSynhronized();
+
+    }
+
     @GetMapping("/filterNameSorted")
     @Operation(summary = "Получить отсортированный по алфавиту список студентов", tags = "streamAPI")
     public Collection<String> getSortedNameStudent() {
